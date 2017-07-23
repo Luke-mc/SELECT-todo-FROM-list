@@ -18,23 +18,54 @@ CREATE TABLE tasks (
   PRIMARY KEY(id)
 );
 
-\d tasks;
-
 ALTER TABLE tasks
 DROP IF EXISTS completed;
-
-\d tasks;
 
 ALTER TABLE tasks
 ADD COLUMN completed_at timestamp without time zone DEFAULT NULL;
 
-\d tasks;
+ALTER TABLE tasks
+ALTER COLUMN updated_at SET NOT NULL;
 
+ALTER TABLE tasks
+ALTER COLUMN updated_at SET DEFAULT NOW();
+
+INSERT INTO tasks
+VALUES (DEFAULT, 'Study SQL', 'Complete this exercise', DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO tasks(title, description)
+VALUES ('Study PostgreSQL', 'Read all the documentation');
+
+SELECT title FROM tasks
+WHERE completed_at IS NULL;
 
 UPDATE tasks
-SET updated_at =  NOT NULL DEFAULT NOW() ;
+SET title = 'Study SQL', completed_at = now();
 
-\d tasks;
+SELECT description, title FROM tasks
+WHERE completed_at IS NULL;
 
+SELECT * FROM tasks ORDER BY created_at DESC;
 
-\c apple;
+INSERT INTO tasks(title, description)
+VALUES ('mistake 1', 'a test entry');
+
+INSERT INTO tasks(title, description)
+VALUES ('mistake 2', 'another test entry');
+
+INSERT INTO tasks(title, description)
+VALUES ('third mistake', 'another test entry');
+
+SELECT title FROM tasks
+WHERE title LIKE '%mistake%';
+
+DELETE FROM tasks
+WHERE title = 'mistake 1';
+
+SELECT title FROM tasks
+WHERE title LIKE '%mistake%';\
+
+DELETE FROM tasks
+WHERE title LIKE '%mistake%';
+
+SELECT * FROM tasks ORDER BY title ASC;
